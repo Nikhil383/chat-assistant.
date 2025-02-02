@@ -1,0 +1,94 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Chat Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Company Chat Assistant</h1>
+
+        <form id="queryForm">
+            <input type="text" id="queryInput" class="input-field" placeholder="Ask me anything..." required />
+            <button type="submit" class="submit-btn">Submit Query</button>
+        </form>
+
+        <div id="response" class="response" style="display:none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('queryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const query = document.getElementById('queryInput').value;
+
+            fetch(`/query?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const responseDiv = document.getElementById('response');
+                    if (data.message) {
+                        responseDiv.innerHTML = `Response: ${data.message}`;
+                    } else {
+                        responseDiv.innerHTML = `Response: ${JSON.stringify(data, null, 2)}`;
+                    }
+                    responseDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    document.getElementById('response').innerHTML = 'Error: Could not get response from the server.';
+                });
+        });
+    </script>
+</body>
+</html>
